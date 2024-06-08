@@ -4,12 +4,12 @@ let moment = require('moment-timezone')
 
 // Owner
 global.owner = [
-  ['6282147781510'],
-  ['6282147781510'],
-  ['6282147781510', 'Axell Dragneel', 'axellxyzz@gmail.com', true]
+  ['6288289338073'],
+  ['6288289338073'],
+  ['6288289338073', 'Axell Dragneel', 'axellxyzz@gmail.com', true]
 ] // Put your number here
-global.mods = ['6282147781510'] // Moderator
-global.prems = ['6282147781510'] // Premium
+global.mods = ['6288289338073'] // Moderator
+global.prems = ['6288289338073'] // Premium
 global.rose = 'yaU7nZmhh1tFirAE07TvJRl0yGD459jKF0EGKsvYCh7o1Jr9ojy3Zr3XlmB3mkro';
 global.xyro = 'ClaraKeyOfficial';
 global.btc = 'Rizalzllk';
