@@ -1,14 +1,12 @@
-import express from 'express'
-import { createServer } from 'http'
-import path from 'path'
-import { Socket } from 'socket.io'
-import { toBuffer } from 'qrcode'
-import fetch from 'node-fetch'
+const express = require('express')
+const path = require('path')
+const SocketIO = require('socket.io')
+const qrcode = require('qrcode')
+const fetch = require('node-fetch')
 
 function connect(conn, PORT) {
     let app = global.app = express()
-    console.log(app)
-    let server = global.server = createServer(app)
+
     // app.use(express.static(path.join(__dirname, 'views')))
     let _qr = 'invalid'
 
@@ -18,18 +16,17 @@ function connect(conn, PORT) {
 
     app.use(async (req, res) => {
         res.setHeader('content-type', 'image/png')
-        res.end(await toBuffer(_qr))
+        res.end(await qrcode.toBuffer(_qr))
     })
 
-    // let io = new Socket(server)
-    // io.on('connection', socket => {
-    //     let { unpipeEmit } = pipeEmit(conn, socket, 'conn-')
-    //     socket.on('disconnect', unpipeEmit)
-    // })
-
-    server.listen(PORT, () => {
-        console.log('App listened on port', PORT)
-        if (opts['keepalive']) keepAlive()
+    let server = app.listen(8080, () => {
+      console.log('App listened on port 8080')
+      if (opts['keepalive']) keepAlive()
+    })
+    let io = SocketIO(server)
+    io.on('connection', socket => {
+        let { unpipeEmit } = pipeEmit(conn, socket, 'conn-')
+        socket.on('disconnect', unpipeEmit)
     })
 }
 
@@ -47,12 +44,13 @@ function pipeEmit(event, event2, prefix = '') {
 }
 
 function keepAlive() {
-    const url = `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`
-    if (/(\/\/|\.)undefined\./.test(url)) return
-    setInterval(() => {
-        fetch(url).catch(console.error)
-    }, 5 * 1000 * 60)
+  const url = `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`
+  if (/(\/\/|\.)undefined\./.test(url)) return
+  setInterval(()=> {
+    fetch(url).catch(console.error)
+  }, 5 * 1000 * 60)
 }
 
 
-export default connect
+module.exports = connect
+    
